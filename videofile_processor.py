@@ -21,12 +21,13 @@ def processFrame(frame: np.ndarray) -> np.ndarray:
 
     combined_16 = (right_hi << 8) | left_lo
 
-    combined_8 = ((combined_16 / 65535) * 255).astype(np.uint8)
+    combined_8 = (combined_16 >> 8).astype(np.uint8)
 
     inverted = 255 - combined_8
 
     out = cv2.cvtColor(inverted, cv2.COLOR_GRAY2BGR)
     return out
+
 
 
 
