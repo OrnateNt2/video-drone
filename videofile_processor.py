@@ -16,22 +16,18 @@ def openVideofileCapture(filename: str):
 
 
 def processFrame(frame: np.ndarray) -> np.ndarray:
-    # Suppose left half is low byte, right half is high byte
-    left_lo  = frame[:, :640, 1].astype(np.uint16)
-    right_hi = frame[:, 640:, 1].astype(np.uint16)
+    left_lo  = frame[:, :640, 1].astype(np.uint16)  
+    right_hi = frame[:, 640:, 1].astype(np.uint16)  
 
-    # Combine into a 16-bit value
     combined_16 = (right_hi << 8) | left_lo
 
-    # Normalize to 0..255
-    combined_8 = cv2.normalize(combined_16, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+    combined_8 = ((combined_16 / 65535) * 255).astype(np.uint8)
 
-    # Invert
     inverted = 255 - combined_8
 
-    # Convert to 3-channel for writing
     out = cv2.cvtColor(inverted, cv2.COLOR_GRAY2BGR)
     return out
+
 
 
 
